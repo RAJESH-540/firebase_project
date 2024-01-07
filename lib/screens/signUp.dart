@@ -1,10 +1,12 @@
 import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/screens/home.dart';
 import 'package:firebase/widgets/textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/alertbox.dart';
 import '../widgets/round_btn.dart';
 
 class SignUp extends StatefulWidget {
@@ -19,23 +21,30 @@ class _SignUpState extends State<SignUp> {
    var passwordController = TextEditingController();
      signUp(String email , String password)async{
       if(email==""&&password==""){
-        return log("enter required fields" as num);
+        return showDialog(context: context, builder: (BuildContext buildContext){
+          return const  CustomAlertBox(title: "Enter Required Fields");
+        });
       }
       else{
-
         try{
           UserCredential? userCredential;
-          userCredential= await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).then((value) {
-            log("user is created" as num);
+          userCredential= await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email, password: password).then((value) {
+            print("user is created");
+               }).then((value)  {
+            FirebaseFirestore.instance.collection("User").doc(email).set({
+              "Email":email,
+            }).then((value) {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const HomePage()));
+            });
           });
+
         }
          on FirebaseAuthException catch(ex){
-          log(ex.code.toString() as num);
+          print(ex.code.toString());
          }
 
-
       }
-
     }
   @override
   Widget build(BuildContext context) {
