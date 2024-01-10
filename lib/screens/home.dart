@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/screens/fetch_data.dart';
+import 'package:firebase/screens/profile_upload.dart';
 import 'package:firebase/screens/signIn.dart';
 import 'package:firebase/widgets/round_btn.dart';
 import 'package:firebase/widgets/textfield.dart';
@@ -57,7 +59,14 @@ class _HomePageState extends State<HomePage> {
                const SizedBox(height: 20,),
                CustomElevatedButton(buttonText: 'add Data', onPressed: (){
                   addData(titleController.text.toString(), desController.text.toString());
-               })
+               }),
+               TextButton(onPressed: (){
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=> const FetchData()));
+              }, child: Text("Next Screen")),
+              TextButton(onPressed: (){
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=> const ProfileUpload()));
+              }, child: Text("Upload"))
+
 
             ],
           ),
